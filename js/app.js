@@ -47,8 +47,40 @@ var Player = function() {
 // This class requires an update(), render() and
 // a handleInput() method.
 Player.prototype.update = function(dt) {
+    var self = this;
+    //if left key is pressed:
+    if(this.pressedKey === 'left' && this.x > 0) { //player isn't on left edge
+        this.x = this.x - 100;
+    }
+     //if right key is pressed:
+    if(this.pressedKey === 'right' && this.x < 400) { //player isn't on right edge
+        this.x = this.x + 100;
+    }
 
-    
+    //if up key is pressed:
+    if(this.pressedKey === 'up' && this.y > 0) {
+        this.y = this.y - 90;
+    }
+
+    //if down key is pressed:
+    if(this.pressedKey === 'down' && this.y < 400) {
+        this.y = this.y + 90;
+    }
+
+    //this will make player jump only once when key is pressed:
+    this.pressedKey = null;
+
+    //if player reaches water, position reset:
+    if(this.y < 0) {
+        this.reset();
+    }
+    allEnemies.forEach(function(enemy) {
+        if(self.x >= enemy.x - 25 && self.x <= enemy.x + 25) {
+            if(self.y >= enemy.y - 25 && self.y <= enemy.y + 25) {
+                self.reset();
+                }
+            }
+        });
 };
 
 Player.prototype.render = function() {
@@ -56,13 +88,23 @@ Player.prototype.render = function() {
     ctx.drawImage(Resources.get(this.sprite), this.x, this.y);
 };
 
+Player.prototype.handleInput = function(e) {
+    this.pressedKey = e;
+};
+
+//Reset player to starting position
+Player.prototype.reset = function() {
+    'use strict';
+   this.x = 200;
+   this.y = 400;
+};
 
 // Now instantiate your objects.
 
 // Place all enemy objects in an array called allEnemies
 var allEnemies = [];
 
-// Position "y" where the enemies will are created
+// Position "y" where the enemies are created
 var enemyPosition = [60, 140, 220];
 var player = new Player(200, 380, 50);
 var enemy;

@@ -1,11 +1,12 @@
 
 //@description: Enemies our player must avoid
-var Enemy = function(x,y, speed) {
+var Enemy = function (x, y, speed) {
     // Variables applied to each of our instances go here,
     // we've provided one for you to get started
 
     // The image/sprite for our enemies, this uses
     // a helper we've provided to easily load images
+	"use strict";
     this.sprite = 'images/enemy-bug.png';
     //position
     this.x = x;
@@ -17,8 +18,9 @@ var Enemy = function(x,y, speed) {
 //@description:
 // Update the enemy's position, required method for game
 // Parameter: dt, a time delta between ticks
-Enemy.prototype.update = function(dt) {
+Enemy.prototype.update = function (dt) {
     // You should multiply any movement by the dt parameter
+	"use strict";
     this.x += this.speed * dt;
     // which will ensure the game runs at the same speed for
     // all computers.
@@ -33,14 +35,15 @@ Enemy.prototype.update = function(dt) {
 
 //@description:
 // Draw the enemy on the screen, required method for game
-Enemy.prototype.render = function() {
+Enemy.prototype.render = function () {
+	"use strict";
     ctx.drawImage(Resources.get(this.sprite), this.x, this.y);
 };
 
 // Now write your own player class
 //@param:
-var Player = function() {
-    'use strict';
+var Player = function () {
+	"use strict";
     this.sprite = 'images/char-cat-girl.png';
     this.x = 200;
     this.y = 400;
@@ -49,41 +52,46 @@ var Player = function() {
 //@description:
 // This class requires an update(), render() and
 // a handleInput() method.
-Player.prototype.update = function(dt) {
+Player.prototype.update = function (dt) {
+	"use strict";
     var self = this;
     //if left key is pressed:
-    if(this.pressedKey === 'left' && this.x > 0) { //player isn't on left edge
+    if (this.pressedKey === 'left' && this.x > 0) { //player isn't on left edge
         this.x = this.x - 100;
     }
      //if right key is pressed:
-    if(this.pressedKey === 'right' && this.x < 400) { //player isn't on right edge
+    if (this.pressedKey === 'right' && this.x < 400) { //player isn't on right edge
         this.x = this.x + 100;
     }
 
     //if up key is pressed:
-    if(this.pressedKey === 'up' && this.y > 0) {
+    if (this.pressedKey === 'up' && this.y > 0) {
         this.y = this.y - 90;
     }
 
     //if down key is pressed:
-    if(this.pressedKey === 'down' && this.y < 400) {
+    if (this.pressedKey === 'down' && this.y < 400) {
         this.y = this.y + 90;
     }
 
     //this will make player jump only once when key is pressed:
     this.pressedKey = null;
 
+    // if player and enemy collide the player's position get reset
+	 allEnemies.forEach(function(enemy) {
+        if(self.x >= enemy.x - 25 &&
+            self.x <= enemy.x + 25 &&
+            self.y >= enemy.y - 25 && 
+            self.y <= enemy.y + 25){
+                player.reset();  
+            }    
+
+        });
+
     //if player reaches water, position reset:
-    if(this.y < 0) {
+    if (this.y < 0) {
         this.reset();
     }
-    allEnemies.forEach(function(enemy) {
-        if(self.x >= enemy.x - 25 && self.x <= enemy.x + 25) {
-            if(self.y >= enemy.y - 25 && self.y <= enemy.y + 25) {
-                self.reset();
-                }
-            }
-        });
 };
 
 //@constructor: Renders the player on the board
@@ -92,16 +100,22 @@ Player.prototype.render = function() {
     ctx.drawImage(Resources.get(this.sprite), this.x, this.y);
 };
 
-
 //@constructor:Handling player input
 Player.prototype.handleInput = function(e) {
     this.pressedKey = e;
 };
 
+Player.prototype.checkCollisions = function(){
+    if (Math.round(enemy.x) === self.x && enemy.y === self.y) {
+            self.reset();
+        }
+        console.log("update");
+};
+
 //@constructor: Reset player to starting position
 Player.prototype.reset = function() {
-   this.x = 200;
-   this.y = 400;
+	this.x = 200;
+    this.y = 400;
 };
 
 // Now instantiate your objects.
@@ -110,7 +124,7 @@ Player.prototype.reset = function() {
 var allEnemies = [];
 
 // @description:Position "y" where the enemies are created
-var enemyPosition = [60, 140, 220];
+var enemyPosition = [60, 140, 220, 220, 140, 60];
 var player = new Player(200, 380, 50);
 var enemy;
 
@@ -124,7 +138,7 @@ var player = new Player();
 
 // @description: This listens for key presses and sends the keys to your
 // Player.handleInput() method. You don't need to modify this.
-document.addEventListener('keyup', function(e) {
+document.addEventListener('keyup', function (e) {
     var allowedKeys = {
         37: 'left',
         38: 'up',

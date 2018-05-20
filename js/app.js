@@ -85,7 +85,6 @@ Player.prototype.update = function (dt) {
             self.y <= enemy.y + 25){
                 player.reset();  
             }    
-
         });
 
     //if player reaches water, position reset:

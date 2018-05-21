@@ -1,3 +1,11 @@
+//@param: congratulations modal
+let modal = document.getElementById("popup1")
+
+
+//@param: close icon and play again button in modal
+let closeicon = document.querySelector(".close");
+
+let playAgainButton = document.getElementById("play-again");
 
 //@description: Enemies our player must avoid
 var Enemy = function (x, y, speed) {
@@ -53,7 +61,25 @@ var Player = function () {
 // This class requires an update(), render() and
 // a handleInput() method.
 Player.prototype.update = function (dt) {
-	"use strict";
+    "use strict";
+    var self = this;
+    //if player reaches water, position reset:
+    if (this.y < 0) {
+        this.reset();
+        congratulations ();
+    }
+};
+
+//@constructor: Renders the player on the board
+Player.prototype.render = function() {
+    
+    ctx.drawImage(Resources.get(this.sprite), this.x, this.y);
+};
+
+//@constructor:Handling player input
+Player.prototype.handleInput = function(e) {
+    this.pressedKey = e;
+    "use strict";
     var self = this;
     //if left key is pressed:
     if (this.pressedKey === 'left' && this.x > 0) { //player isn't on left edge
@@ -76,39 +102,6 @@ Player.prototype.update = function (dt) {
 
     //this will make player jump only once when key is pressed:
     this.pressedKey = null;
-
-    // if player and enemy collide the player's position get reset
-	 allEnemies.forEach(function(enemy) {
-        if(self.x >= enemy.x - 25 &&
-            self.x <= enemy.x + 25 &&
-            self.y >= enemy.y - 25 && 
-            self.y <= enemy.y + 25){
-                player.reset();  
-            }    
-        });
-
-    //if player reaches water, position reset:
-    if (this.y < 0) {
-        this.reset();
-    }
-};
-
-//@constructor: Renders the player on the board
-Player.prototype.render = function() {
-    
-    ctx.drawImage(Resources.get(this.sprite), this.x, this.y);
-};
-
-//@constructor:Handling player input
-Player.prototype.handleInput = function(e) {
-    this.pressedKey = e;
-};
-
-Player.prototype.checkCollisions = function(){
-    if (Math.round(enemy.x) === self.x && enemy.y === self.y) {
-            self.reset();
-        }
-        console.log("update");
 };
 
 //@constructor: Reset player to starting position
@@ -123,17 +116,28 @@ Player.prototype.reset = function() {
 var allEnemies = [];
 
 // @description:Position "y" where the enemies are created
-var enemyPosition = [60, 140, 220, 220, 140, 60];
-var player = new Player(200, 380, 50);
+var enemyPosition = [60, 140, 220, 220, 140, 60, 80];
+var player = new Player (200, 380, 50);
 var enemy;
 
-enemyPosition.forEach(function(posY) {
-    enemy = new Enemy(0, posY, 100 + Math.floor(Math.random() * 512));
+enemyPosition.forEach(function (posY) {
+    enemy = new Enemy (0, posY, 100 + Math.floor(Math.random() * 512));
     allEnemies.push(enemy);
 });
-// @param:  Place the player object in a variable called player
+// @param: Place the player object in a variable called player
 var player = new Player();
 
+// @constructor: If player and enemy collide the player's position get reset
+checkCollisions = function () {
+    allEnemies.forEach(function (enemy) {
+    if (player.x >= enemy.x - 25 &&
+        player.x <= enemy.x + 25 &&
+        player.y >= enemy.y - 25 && 
+        player.y <= enemy.y + 25) {
+            player.reset();
+        }
+    })
+};
 
 // @description: This listens for key presses and sends the keys to your
 // Player.handleInput() method. You don't need to modify this.
@@ -147,3 +151,32 @@ document.addEventListener('keyup', function (e) {
 
     player.handleInput(allowedKeys[e.keyCode]);
 });
+
+//@constructor: congratulations when player reaches the top
+function congratulations () {
+    //show congratulations modal
+    modal.classList.remove("hidden");
+    modal.classList.add("show");
+    //closeicon on modal
+    closeModal();
+	//play again? button	
+	playAgain();
+    };
+
+//@constructor: close modal
+function closeModal(){
+    closeicon.addEventListener("click", function(e){
+        modal.classList.remove("show");
+        player.reset();
+    });
+}
+
+//@constructor: play Again button
+function playAgain(){
+	playAgainButton.addEventListener("click", function(e){
+		modal.classList.remove("show");
+		player.reset();
+	});
+}
+
+

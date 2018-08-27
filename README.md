@@ -1,4 +1,5 @@
 # Arcade Game Project
+I used the provided <a target="_blank" href="https://www.google.com/url?q=https://github.com/udacity/frontend-nanodegree-arcade-game&amp;sa=D&amp;ust=1496438325981000&amp;usg=AFQjCNHZChhjotWSnxbqtSYsHnkg_jEkog_">art assets and game engine</a> by Udacity FEND course.
 
 ## How to install the game :
 1.	Download the repository.

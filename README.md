@@ -9,3 +9,5 @@
 1. Use the arrow keys to move.
 2. The objective is to reach the top of the water.
 3. Avoid the bugs. If you got hit by them, the game will reset.
+
+<img src="https://d17h27t6h515a5.cloudfront.net/topher/2017/June/5931c951_frogger/frogger.png">
